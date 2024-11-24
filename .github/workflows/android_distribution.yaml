@@ -1,9 +1,9 @@
 name: andorid distribution with fastlane
 
-on:
-  push:
-    branches:
-      - master
+# on:
+#   push:
+#     branches:
+#       - master
 
 jobs:
   distribution_to_firebase:

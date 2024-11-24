@@ -1,0 +1,59 @@
+name: Build Release 
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run tests against'
+        required: true
+        type: choice
+        options:
+        - staging
+        - production
+      title:
+        description: 'Title'
+        required: true  
+        
+run-name: ${{ github.event.inputs.title }}
+jobs:
+  distribution_to_firebase:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with: 
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: install flutter 
+      uses: subosito/flutter-action@v2
+      with:
+        channel: stable
+
+    - name: Install zip
+      run: sudo apt-get install zip
+      
+    - name: Compress APK
+      run: zip -j -9 ${{ github.workspace }}/build/app-release.zip ${{ github.workspace }}/build/app/outputs/flutter-apk/app-${{ github.event.inputs.environment }}-release.apk
+
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: app-release
+        path: ${{ github.workspace }}/build/app/outputs/flutter-apk/app-${{ github.event.inputs.environment }}-release.apk
+
+    - name: Send APK
+      uses: appleboy/telegram-action@master
+      with:
+       to: ${{ secrets.TELEGRAM_ID }}
+       token: ${{ secrets.TELEGRAM_TOKEN }}
+       message: |
+          Name : ${{ github.actor }}
+          
+          Branch: ${{ github.ref }}
+          
+          Description : $${{ github.event.inputs.title }}
+          
+       document: ${{ github.workspace }}/build/app-release.zip
