@@ -39,7 +39,7 @@ jobs:
       run: zip -j -9 ${{ github.workspace }}/build/app-release.zip ${{ github.workspace }}/build/app/outputs/flutter-apk/app-${{ github.event.inputs.environment }}-release.apk
 
     - name: Upload APK artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: app-release
         path: ${{ github.workspace }}/build/app/outputs/flutter-apk/app-${{ github.event.inputs.environment }}-release.apk
