@@ -34,7 +34,10 @@ jobs:
 
     - name: Install zip
       run: sudo apt-get install zip
-      
+
+    - name: Build APK
+      run: flutter build apk --release --flavor ${{ github.event.inputs.environment }} --target lib/main_${{ github.event.inputs.environment }}.dart  --target-platform=android-arm64 --target-platform=android-arm
+     
     - name: Compress APK
       run: zip -j -9 ${{ github.workspace }}/build/app-release.zip ${{ github.workspace }}/build/app/outputs/flutter-apk/app-${{ github.event.inputs.environment }}-release.apk
 
