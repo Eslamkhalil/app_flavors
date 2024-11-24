@@ -15,7 +15,7 @@ on:
         
 run-name: ${{ github.event.inputs.title }}
 jobs:
-  distribution_to_firebase:
+  Build Release:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
